@@ -1,4 +1,3 @@
-const EntityBase = require('./entity-base')
 const Util = require('./util')
 const Employee = require('./employee')
 
