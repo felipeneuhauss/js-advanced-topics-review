@@ -1,3 +1,4 @@
+(() => { // IIFE -> Immediately Invoke Function Expression
 const COUNTER = 'counter'
 const RESTART = 'restart'
 const COUNT = 100
@@ -8,7 +9,7 @@ class CounterComponent {
     this.initialize()
   }
 
-  proxyCounterPrepare () {
+  proxyCounterPrepare() {
     const handler = {
       set: (currentContext, propertyKey, newValue) => {
         console.log({currentContext, propertyKey, newValue})
@@ -22,20 +23,21 @@ class CounterComponent {
 
     const counter = new Proxy({
       value: COUNT,
-      stop: () => {}
+      stop: () => {
+      }
     }, handler)
 
     return counter
   }
 
-  updateCounterValue = ({ counterElement, counter }) => () =>  {
+  updateCounterValue = ({counterElement, counter}) => () => {
     console.log(counter)
     const textCounterId = '$$counterId'
     const defaultText = `Começando em <strong>${textCounterId}</strong> segundos...`
     counterElement.innerHTML = defaultText.replace(textCounterId, counter.value--)
   }
 
-  scheduleStop ({ counterElement, interval}) {
+  scheduleStop({counterElement, interval}) {
     return () => {
       clearInterval(interval)
       counterElement.innerHTML = ''
@@ -43,7 +45,7 @@ class CounterComponent {
     }
   }
 
-  prepareButton (buttonElement, initializeFunction) {
+  prepareButton(buttonElement, initializeFunction) {
     buttonElement.addEventListener('click', initializeFunction.bind(this))
     return (value = true) => {
       const attr = 'disabled'
@@ -56,13 +58,11 @@ class CounterComponent {
     }
   }
 
-  initialize () {
+  initialize() {
     console.log('Initialized')
     const counterElement = document.getElementById(COUNTER)
     const counter = this.proxyCounterPrepare()
-    // counter.valor = 100
-    // counter.valor = 90
-    // counter.valor = 80
+
     const args = {
       counterElement,
       counter
@@ -75,9 +75,12 @@ class CounterComponent {
       const disableButton = this.prepareButton(restartButton, this.initialize)
       disableButton()
 
-      const args = { counterElement, interval }
-      const scheduleCounterStop = this.scheduleStop.apply({ disableButton }, [args])
+      const args = {counterElement, interval}
+      const scheduleCounterStop = this.scheduleStop.apply({disableButton}, [args])
       counter.stop = scheduleCounterStop
     }
   }
 }
+
+window.CounterComponent = CounterComponent
+})()
