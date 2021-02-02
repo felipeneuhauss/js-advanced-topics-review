@@ -39,7 +39,7 @@ class CounterComponent {
     return () => {
       clearInterval(interval)
       counterElement.innerHTML = ''
-      this.disableButton()
+      this.disableButton(false)
     }
   }
 
@@ -73,6 +73,7 @@ class CounterComponent {
     {
       const restartButton = document.getElementById(RESTART)
       const disableButton = this.prepareButton(restartButton, this.initialize)
+      disableButton()
 
       const args = { counterElement, interval }
       const scheduleCounterStop = this.scheduleStop.apply({ disableButton }, [args])
